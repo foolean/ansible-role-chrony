@@ -1,0 +1,15 @@
+# Copyright (c) 2023, Bennett Samowich <bennett@foolean.org>
+# All rights reserved
+# SPDX short identifier: BSD-3-Clause
+---
+
+- name: Systemd daemon-reload
+  become: true
+  ansible.builtin.systemd:
+    daemon_reload: true
+
+- name: Restart chronyd
+  become: true
+  ansible.builtin.service:
+    name: chronyd
+    state: restarted

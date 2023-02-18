@@ -1,0 +1,69 @@
+# Copyright (c) 2023, Bennett Samowich <bennett@foolean.org>
+# All rights reserved
+# SPDX short identifier: BSD-3-Clause
+---
+
+- name: Ensure chrony is installed (CIS)
+  become: true
+  ansible.builtin.package:
+    name: 'chrony'
+    state: present
+
+- name: Ensure chrony is configured (CIS)
+  become: true
+  ansible.builtin.template:
+    src: 'etc/chrony.conf.j2'
+    dest: '/etc/chrony.conf'
+    owner: 'root'
+    group: 'root'
+    mode: '0644'
+  notify:
+    - 'Restart chronyd'
+
+- name: Ensure chrony options are configured (CIS)
+  become: true
+  ansible.builtin.template:
+    src: 'etc/sysconfig/chronyd.j2'
+    dest: '/etc/sysconfig/chronyd'
+    owner: 'root'
+    group: 'root'
+    mode: '0644'
+  notify:
+    - 'Restart chronyd'
+
+- name: Ensure chrony keys are configured (CIS)
+  become: true
+  ansible.builtin.template:
+    src: 'etc/chrony.keys.j2'
+    dest: '/etc/chrony.keys'
+    owner: 'root'
+    group: 'chrony'
+    mode: '0640'
+  notify:
+    - 'Restart chronyd'
+
+- name: Create chronyd service override directory
+  become: true
+  ansible.builtin.file:
+    name: '/etc/systemd/system/chronyd.service.d'
+    state: directory
+    owner: 'root'
+    group: 'root'
+    mode: '0755'
+
+- name: Fix umask for chronyd
+  become: true
+  ansible.builtin.template:
+    src: 'etc/systemd/system/chronyd.service.d/override.conf.j2'
+    dest: '/etc/systemd/system/chronyd.service.d/override.conf'
+    owner: 'root'
+    group: 'root'
+    mode: '0644'
+  notify:
+    - 'Systemd daemon-reload'
+    - 'Restart chronyd'
+
+# Flush any handlers that we might have called
+- name: Flush handlers
+  ansible.builtin.meta:
+    flush_handlers

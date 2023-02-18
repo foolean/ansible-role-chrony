@@ -1,0 +1,44 @@
+# Copyright (c) 2023, Bennett Samowich <bennett@foolean.org>
+# All rights reserved
+# SPDX short identifier: BSD-3-Clause
+---
+
+# ### allow
+#  Array of clients permitted to query this server
+#  (default: null)
+chrony_allow: null
+
+# ### driftfile
+#  The name and path of the frequency file.
+#  (default: /var/lib/chrony/drift)
+chrony_driftfile: '/var/lib/chrony/drift'
+
+# ### keys
+#  Lines to be added to the keys file
+#  (default: undefined)
+chrony_keys: null
+
+# ### listen
+#  Interface chrony will listen on only accept requests on this interface.
+#  (default: undefined)
+chrony_listen: null
+
+# ### logconfig
+#  Specify which events chronyd will log
+#  (default: measurements statistics tracking)
+chrony_logconfig: 'measurements statistics tracking'
+
+# ### peers
+#  Array of NTP peers to query
+#  (default: undefined)
+chrony_peers: null
+
+# ### servers
+#  Array of NTP servers to query
+#  (default: [0-3].rhel.pool.ntp.org) Ref: CIS-2.2.1.2
+chrony_servers:
+  - '2.rhel.pool.ntp.org'
+  - '1.rhel.pool.ntp.org'
+  - '2.rhel.pool.ntp.org'
+  - '3.rhel.pool.ntp.org'
+  - '0.rhel.pool.ntp.org'

@@ -68,6 +68,7 @@
       notify:
         - 'Systemd daemon-reload'
         - 'Restart chronyd'
+        - 'Sync time'
 
     # Flush any handlers that we might have called
     - name: Flush handlers

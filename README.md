@@ -1,7 +1,8 @@
 # ansible-role-chrony
 
-Ansible role to manage chrony
+    Ansible role to manage chrony
 
+    Note: This role will mask systemd-timesyncd and remove ntp
 
 ## Requirements
 
@@ -32,24 +33,24 @@ Ansible role to manage chrony
     (default: null)
 
 **chrony_listen**
- 
+
     Interface chrony will listen on only accept requests on this interface.
     (default: null)
 
 **chrony_logconfig**
 
-    Specify which events chronyd will log  
+    Specify which events chronyd will log
     (default: measurements statistics tracking)
 
 **chrony_peers**
 
-    List of NTP peers to query  
+    List of NTP peers to query
     (default: null)
 
 **chrony_servers**
 
-    List of NTP servers to query  
-    (default: [0-3].rhel.pool.ntp.org)
+    List of NTP servers to query
+    (default: [0-3].pool.ntp.org)
 
 
 ## Example playbook
@@ -63,8 +64,15 @@ Ansible role to manage chrony
     ```
 
 
+## Supported operating systems
+
+    * Debian (11)
+    * RedHat (8)
+
+
 ## Compliance
 
+    * CIS Debian Linux 11 Benchmark v1.0.0
     * CIS RedHat Enterprise Linux 8 Benchmark v2.0.0
 
 

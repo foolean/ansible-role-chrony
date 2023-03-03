@@ -20,8 +20,23 @@ server {{ peer }}
 bindaddress {{ chrony_listen }}
 {% endif %}
 
+{% if ansible_os_family|lower == "debian" %}
+# Use time sources from DHCP.
+sourcedir /run/chrony-dhcp
+
+# Use NTP sources found in /etc/chrony/sources.d.
+sourcedir /etc/chrony/sources.d
+
+{% endif %}
+# Name of the system user to which chronyd will switch
+# after start in order to drop root privileges
+user {{ chrony_user }}
+
 # Record the rate at which the system clock gains/losses time.
 driftfile {{ chrony_driftfile }}
+
+# Save NTS keys and cookies.
+ntsdumpdir /var/lib/chrony
 
 # Allow the system clock to be stepped in the first three updates
 # if its offset is larger than 1 second.
@@ -49,7 +64,7 @@ allow {{ allow_line }}
 #local stratum 10
 
 # Specify file containing keys for NTP authentication.
-keyfile /etc/chrony.keys
+keyfile {{ chrony_keys_file }}
 
 # Get TAI-UTC offset and leap seconds from the system tz database.
 leapsectz right/UTC

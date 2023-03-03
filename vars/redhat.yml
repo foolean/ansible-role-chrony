@@ -1,0 +1,20 @@
+# Copyright (c) 2023, Bennett Samowich <bennett@foolean.org>
+# All rights reserved
+# SPDX short identifier: BSD-3-Clause
+---
+
+# chrony_config_file
+#   Path to the chrony configuration file
+chrony_config_file: "/etc/chrony.conf"
+
+# chrony_keys_file
+#   Path to the chrony keys file
+chrony_keys_file: "/etc/chrony.keys"
+
+# chrony_group
+#   Group used to restrict access to chrony files
+chrony_group: "chrony"
+
+# chrony_user
+#   User that chrony will switch to after startup
+chrony_user: "chrony"

@@ -35,10 +35,9 @@ chrony_peers: null
 
 # ### servers
 #  Array of NTP servers to query
-#  (default: [0-3].rhel.pool.ntp.org) Ref: CIS-2.2.1.2
+#  (default: [0-3].pool.ntp.org) Ref: CIS
 chrony_servers:
-  - '2.rhel.pool.ntp.org'
-  - '1.rhel.pool.ntp.org'
-  - '2.rhel.pool.ntp.org'
-  - '3.rhel.pool.ntp.org'
-  - '0.rhel.pool.ntp.org'
+  - '0.pool.ntp.org'
+  - '1.pool.ntp.org'
+  - '2.pool.ntp.org'
+  - '3.pool.ntp.org'

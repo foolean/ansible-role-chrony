@@ -9,24 +9,37 @@
 - name: Role foolean/chrony
   block:
 
-    - name: Ensure chrony is installed (CIS)
+    - name: Set OS variables
+      ansible.builtin.include_vars:
+        file: "{{ item }}"
+      with_first_found:
+        - "{{ ansible_os_family|lower }}.yml"
+        - "default.yml"
+
+    - name: Collecting service facts
+      become: true
+      ansible.builtin.service_facts:
+      when:
+        - "ansible_facts.services is not defined"
+
+    - name: CIS | Ensure chrony is installed
       become: true
       ansible.builtin.package:
         name: 'chrony'
         state: present
 
-    - name: Ensure chrony is configured (CIS)
+    - name: CIS | Ensure chrony is configured
       become: true
       ansible.builtin.template:
         src: 'etc/chrony.conf.j2'
-        dest: '/etc/chrony.conf'
+        dest: "{{ chrony_config_file }}"
         owner: 'root'
         group: 'root'
         mode: '0644'
       notify:
         - 'Restart chronyd'
 
-    - name: Ensure chrony options are configured (CIS)
+    - name: CIS | Ensure chrony options are configured
       become: true
       ansible.builtin.template:
         src: 'etc/sysconfig/chronyd.j2'
@@ -34,16 +47,18 @@
         owner: 'root'
         group: 'root'
         mode: '0644'
+      when:
+        - ansible_os_family == "RedHat"
       notify:
         - 'Restart chronyd'
 
-    - name: Ensure chrony keys are configured (CIS)
+    - name: CIS | Ensure chrony keys are configured
       become: true
       ansible.builtin.template:
         src: 'etc/chrony.keys.j2'
-        dest: '/etc/chrony.keys'
+        dest: "{{ chrony_keys_file }}"
         owner: 'root'
-        group: 'chrony'
+        group: "{{ chrony_group }}"
         mode: '0640'
       notify:
         - 'Restart chronyd'
@@ -69,6 +84,22 @@
         - 'Systemd daemon-reload'
         - 'Restart chronyd'
         - 'Sync time'
+
+    - name: CIS | Ensure systemd-timesyncd is disabled
+      become: true
+      ansible.builtin.systemd:
+        name: 'systemd-timesyncd.service'
+        masked: true
+        enabled: false
+        state: stopped
+      when:
+        - "'systemd-timesyncd' in ansible_facts.services"
+
+    - name: CIS | Ensure ntp is removed
+      become: true
+      ansible.builtin.package:
+        name: 'ntp'
+        state: absent
 
     # Flush any handlers that we might have called
     - name: Flush handlers

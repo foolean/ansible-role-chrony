@@ -85,7 +85,7 @@
         - 'Restart chronyd'
         - 'Sync time'
 
-    - name: CIS | Ensure systemd-timesyncd is disabled
+    - name: CIS | Ensure systemd-timesyncd is disabled (systemd)
       become: true
       ansible.builtin.systemd:
         name: 'systemd-timesyncd.service'
@@ -94,6 +94,18 @@
         state: stopped
       when:
         - "'systemd-timesyncd' in ansible_facts.services"
+
+    # The Debian CIS-CAT audit still looks for the symlink showing
+    # that systemd-timesyncd is masked, even when systemd-timesyncd
+    # is not installed.  This command creates the symlink and allows
+    # the CIS-CAT audit to pass.
+    - name: CIS | Ensure systemd-timesyncd is disabled (cmd)  # noqa: command-instead-of-module
+      become: true
+      ansible.builtin.command:
+        cmd: 'systemctl --now mask systemd-timesyncd'
+      when:
+        - ansible_os_family|lower == 'debian'
+        - "'systemd-timesyncd' not in ansible_facts.services"
 
     - name: CIS | Ensure ntp is removed
       become: true

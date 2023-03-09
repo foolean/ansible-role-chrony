@@ -89,11 +89,11 @@
       become: true
       ansible.builtin.systemd:
         name: 'systemd-timesyncd.service'
-        masked: true
         enabled: false
+        masked: true
         state: stopped
       when:
-        - "'systemd-timesyncd' in ansible_facts.services"
+        - '"systemd-timesyncd.service" in ansible_facts.services'
 
     # The Debian CIS-CAT audit still looks for the symlink showing
     # that systemd-timesyncd is masked, even when systemd-timesyncd
@@ -105,7 +105,7 @@
         cmd: 'systemctl --now mask systemd-timesyncd'
       when:
         - ansible_os_family|lower == 'debian'
-        - "'systemd-timesyncd' not in ansible_facts.services"
+        - '"systemd-timesyncd.service" not in ansible_facts.services'
 
     - name: CIS | Ensure ntp is removed
       become: true

@@ -69,6 +69,7 @@
     * Debian (11)
     * RedHat (8)
     * Rocky (8)
+    * Raspbian (11)
 
 
 ## Compliance
